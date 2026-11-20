@@ -1,5 +1,7 @@
 # ---- 密钥与本地配置（绝对不允许进仓库）----
-config.json
+# 注意：03_CONFIG_配置规则/config.json 必须入库（含占位符，是程序运行必需），
+# 它里面不含任何真实密钥（key 走环境变量 DASHSCOPE_API_KEY）。
+# 绝对不要往这个文件里写真实 endpoint / key。
 .env
 .env.local
 *.key

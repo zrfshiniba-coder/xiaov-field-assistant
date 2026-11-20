@@ -1,0 +1,98 @@
+{
+  "_comment": "小V野外助教 · 主配置",
+  "_author": "周荣发 / 2026210209 / 地理科学262 / 滁州学院",
+  "_created": "2026-11-03",
+  "_copyright": "本文件及同目录代码为周荣发（2026210209）原创作品，仅用于滁州学院2026级新生人工智能创新应用比赛提交与评审。",
+  "schema_version": "1.0",
+  "app": {
+    "name": "小V野外助教",
+    "subtitle": "地理野外实习数据智能质检助手",
+    "version": "1.0.0",
+    "author": "周荣发",
+    "student_id": "2026210209",
+    "class": "地理科学262",
+    "school": "滁州学院"
+  },
+  "server": {
+    "host": "127.0.0.1",
+    "port": 5000,
+    "max_upload_mb": 10,
+    "allowed_ext": [
+      ".csv"
+    ],
+    "debug": false
+  },
+  "data": {
+    "encoding": "utf-8-sig",
+    "required_fields": [
+      "record_id",
+      "sample_no",
+      "longitude",
+      "latitude",
+      "species",
+      "cover",
+      "slope_aspect",
+      "survey_date",
+      "altitude"
+    ],
+    "field_types": {
+      "record_id": "str",
+      "sample_no": "str",
+      "longitude": "float",
+      "latitude": "float",
+      "species": "str",
+      "cover": "float",
+      "slope_aspect": "str",
+      "survey_date": "date",
+      "altitude": "float"
+    }
+  },
+  "model_policy": {
+    "_comment": "模型可插拔：换模型只改本段，不改代码",
+    "switch_mode": "config_only",
+    "offline_fallback": true,
+    "require_capability_check": true,
+    "price_alert_threshold": 0.02,
+    "roles": {
+      "reviewer": {
+        "provider": "dashscope",
+        "model": "YOUR-MODEL-NAME",
+        "base_url": "https://YOUR-ENDPOINT-HERE/v1",
+        "reasoning_effort": "max",
+        "enable_search": false,
+        "temperature": 0.3,
+        "timeout": 120
+      },
+      "judge": {
+        "provider": "dashscope",
+        "model": "YOUR-MODEL-NAME",
+        "base_url": "https://YOUR-ENDPOINT-HERE/v1",
+        "reasoning_effort": "max",
+        "enable_search": false,
+        "temperature": 0.1,
+        "timeout": 60
+      }
+    },
+    "fallback_chain": [
+      "reviewer",
+      "judge"
+    ],
+    "api_key_env": "DASHSCOPE_API_KEY"
+  },
+  "output": {
+    "dir": "output",
+    "files": {
+      "issues": "问题清单.json",
+      "metrics": "metrics.json",
+      "teacher_review": "teacher_review.csv",
+      "summary": "summary_report.csv"
+    }
+  },
+  "ai_policy": {
+    "_comment": "AI 只能新增提示级内容，不能修改/降级/覆盖规则结论",
+    "ai_can_override_rule": false,
+    "ai_max_severity": "提示",
+    "low_confidence_threshold": 0.6,
+    "suppress_duplicate_with_rule": true
+  }
+}
