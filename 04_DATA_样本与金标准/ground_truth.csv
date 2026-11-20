@@ -1,0 +1,13 @@
+record_id,field,rule_id,severity,note
+LY-003,cover,R01,错误,盖度168超出0-100合法区间
+LY-005,"longitude,latitude",R02,错误,经纬度写反（经度位32.2895/纬度位118.3150），合并为1条
+LY-008,survey_date,R03,错误,调查日期2027-03-15晚于当前日期
+LY-031,survey_date,R04,错误,调查日期2015-05-01早于2020年下限
+LY-032,sample_no,R05,错误,样方编号Q32重复（第1条，与LY-033同号）
+LY-033,sample_no,R05,错误,样方编号Q32重复（第2条，与LY-032同号）
+LY-033,record_id,R06,错误,LY-034行记录ID误写成LY-033，与LY-033重复
+LY-035,altitude,R07,错误,海拔2500m超出0-2000范围
+LY-036,"cover,species",R08,错误,物种为裸地但盖度62%与无植被类型矛盾
+LY-037,slope_aspect,R11,警告,坡向「东南偏南」不在受控词表内
+LY-038,species,R12,提示,物种「松树」为马尾松的别名
+LY-039,species,R13,提示,物种「银杏」不在本地物种名录内

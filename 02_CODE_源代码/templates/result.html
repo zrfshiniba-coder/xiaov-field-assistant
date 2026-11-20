@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<!--
+  小V野外助教 · 结果页
+  作者：周荣发 / 2026210209 / 地理科学262 / 滁州学院
+  版权：本页面为周荣发原创作品，仅用于滁州学院2026级新生人工智能创新应用比赛提交与评审。
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ app_name }} · 质检结果</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 32px 20px 60px;
+      font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+      background: #f4f7f9; color: #1f2d3d;
+    }
+    .wrap { max-width: 1080px; margin: 0 auto; }
+    h1 { font-size: 22px; margin: 0 0 4px; }
+    .sub { color: #6b7c8c; font-size: 13px; margin-bottom: 22px; }
+    .stats { display: flex; gap: 14px; margin-bottom: 22px; flex-wrap: wrap; }
+    .stat {
+      flex: 1; min-width: 150px; background: #fff; border-radius: 12px;
+      padding: 18px 20px; box-shadow: 0 2px 10px rgba(31,45,61,.06);
+    }
+    .stat .n { font-size: 28px; font-weight: 700; line-height: 1.2; }
+    .stat .l { font-size: 12px; color: #7b8b9a; margin-top: 4px; }
+    .err .n { color: #d9534f; }
+    .warn .n { color: #e8a33d; }
+    .hint .n { color: #4a90d9; }
+    .ok .n { color: #2f9e6e; }
+    .bar {
+      background: #fff; border-radius: 12px; padding: 16px 20px;
+      box-shadow: 0 2px 10px rgba(31,45,61,.06); margin-bottom: 20px;
+      font-size: 13px; color: #4a5b6b; line-height: 1.9;
+    }
+    .bar b { color: #2f9e6e; }
+    .tag {
+      display: inline-block; padding: 2px 8px; border-radius: 4px;
+      font-size: 11px; font-weight: 600; margin-right: 6px;
+    }
+    .t-err { background: #fdecea; color: #c9302c; }
+    .t-warn { background: #fdf6e3; color: #a8751a; }
+    .t-hint { background: #eaf3fb; color: #2f6fa8; }
+    .t-ai { background: #f0eafb; color: #6b4fa8; }
+    table {
+      width: 100%; border-collapse: collapse; background: #fff;
+      border-radius: 12px; overflow: hidden;
+      box-shadow: 0 2px 10px rgba(31,45,61,.06); font-size: 13px;
+    }
+    th {
+      background: #f7fafc; text-align: left; padding: 12px 14px;
+      font-weight: 600; color: #4a5b6b; border-bottom: 1px solid #e8eef2;
+      white-space: nowrap;
+    }
+    td { padding: 11px 14px; border-bottom: 1px solid #f2f6f8; vertical-align: top; }
+    tr:last-child td { border-bottom: none; }
+    tr:hover td { background: #fbfdfe; }
+    .msg { color: #2b3a48; }
+    .sug { color: #7b8b9a; font-size: 12px; margin-top: 3px; }
+    .actions { margin: 22px 0 0; display: flex; gap: 12px; flex-wrap: wrap; }
+    .btn {
+      padding: 11px 22px; border-radius: 9px; text-decoration: none;
+      font-size: 14px; font-weight: 600; transition: all .2s;
+    }
+    .btn-p { background: #2f9e6e; color: #fff; }
+    .btn-p:hover { background: #268a5f; }
+    .btn-s { background: #fff; color: #2f9e6e; border: 1px solid #b8ddc9; }
+    .btn-s:hover { background: #f4fbf8; }
+    .foot {
+      margin-top: 34px; padding-top: 18px; border-top: 1px solid #e4ebf0;
+      font-size: 12px; color: #93a3b1; text-align: center; line-height: 1.8;
+    }
+    .empty { background:#fff; border-radius:12px; padding:40px; text-align:center; color:#2f9e6e; font-size:15px; }
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <h1>{{ app_name }} · 质检结果</h1>
+    <div class="sub">文件：{{ result.file }}</div>
+
+    <div class="stats">
+      <div class="stat ok">
+        <div class="n">{{ result.meta_1.passed_rows }}</div>
+        <div class="l">通过格式校验的记录</div>
+      </div>
+      <div class="stat err">
+        <div class="n">{{ result.by_sev['错误'] }}</div>
+        <div class="l">错误（必须改）</div>
+      </div>
+      <div class="stat warn">
+        <div class="n">{{ result.by_sev['警告'] }}</div>
+        <div class="l">警告（高度可疑）</div>
+      </div>
+      <div class="stat hint">
+        <div class="n">{{ result.by_sev['提示'] }}</div>
+        <div class="l">提示（建议核对）</div>
+      </div>
+    </div>
+
+    <div class="bar">
+      总行数 <b>{{ result.meta_1.total_rows }}</b> ·
+      格式失败 <b>{{ result.meta_1.failed_rows }}</b> ·
+      编码 <b>{{ result.meta_1.encoding }}</b> ·
+      启用规则 <b>{{ result.meta_2.enabled_rule_set|join(', ') or '（无）' }}</b> ·
+      AI 状态 <b>{{ result.meta_3.ai_status }}</b>
+    </div>
+
+    {% if result.issues %}
+    <table>
+      <thead>
+        <tr>
+          <th>行</th><th>记录</th><th>字段</th><th>规则</th>
+          <th>级别</th><th>问题</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for it in result.issues %}
+        <tr>
+          <td>{{ it.row }}</td>
+          <td>{{ it.record_id }}</td>
+          <td>{{ it.field }}</td>
+          <td>
+            {{ it.rule_id }}
+            {% if it.source == 'ai' %}<span class="tag t-ai">AI</span>{% endif %}
+          </td>
+          <td>
+            {% if it.severity == '错误' %}<span class="tag t-err">错误</span>
+            {% elif it.severity == '警告' %}<span class="tag t-warn">警告</span>
+            {% else %}<span class="tag t-hint">提示</span>{% endif %}
+          </td>
+          <td>
+            <div class="msg">{{ it.message }}</div>
+            {% if it.suggestion %}<div class="sug">建议：{{ it.suggestion }}</div>{% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    {% else %}
+      <div class="empty">未发现问题，数据通过全部校验 ✓</div>
+    {% endif %}
+
+    <div class="actions">
+      <a class="btn btn-p" href="/download/csv">下载问题清单（CSV）</a>
+      <a class="btn btn-s" href="/download/json">下载问题清单（JSON）</a>
+      <a class="btn btn-s" href="/">重新上传</a>
+    </div>
+
+    <div class="foot">
+      {{ author }} · {{ student_id }} · {{ klass }} · {{ school }}<br>
+      规则结论不可被 AI 推翻；教师保留最终裁定权
+    </div>
+  </div>
+</body>
+</html>

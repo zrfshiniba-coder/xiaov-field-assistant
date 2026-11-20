@@ -1,0 +1,15 @@
+$ run_eval.py
+
+运行时间：2026-11-19T23:27:31
+模式：online（ai_enabled=False, ai_status=no_api_key_offline_fallback）
+样本：all_samples.csv（80 行，通过 80，失败 0）
+第一关问题：0
+第二关问题：13
+第三关提示：0（附录 0，抑制重复 0）
+召回率：100.00%  精确率：100.00%  F1：100.00%
+规则 only：召回 100.00% / 精确 100.00%
+启用规则：R01, R02, R03, R04, R05, R06, R07, R08, R11, R12, R13
+禁用规则：（无）
+
+输出目录：C:\Users\zrfsh\Desktop\xiaov-field-assistant\02_CODE_源代码\output
+

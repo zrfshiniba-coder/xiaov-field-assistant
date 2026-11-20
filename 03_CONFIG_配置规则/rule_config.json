@@ -1,0 +1,246 @@
+{
+  "_comment": "小V野外助教 · 规则配置（第二关）",
+  "_author": "周荣发 / 2026210209 / 地理科学262 / 滁州学院",
+  "_copyright": "本规则字典为周荣发（2026210209）原创，仅用于本次比赛提交与评审。",
+
+  "version": "1.0.0",
+  "schema_version": "1.0",
+
+  "_reference_date_note": "日期类规则（R03/R04）的基准日。固定写死，保证同一份提交包在任何机器、任何日期运行结果完全一致。改这里 = 改评测口径，必须同步重跑 expected_output/。",
+  "reference_date": "2026-11-03",
+
+  "thresholds": {
+    "cover_min": 0,
+    "cover_max": 100,
+    "_cover_max_note": "cover_max 是「规则阈值」，不是「盖度字段的合法取值范围」。盖度本身合法范围恒为 0–100；cover_max 表示「超过多少判为越界」。默认 100 = 只有 >100 才报错。",
+    "cover_max_legal_range": [50, 100],
+    "_cover_max_legal_range_note": "允许配置的阈值下限为 50，是为了防止把阈值调到 30 之类导致大面积误报（业务上盖度 40% 的样方很常见）。这是「防误配置护栏」，不是「盖度不能低于 50」。",
+    "altitude_min": 0,
+    "altitude_max": 2000,
+    "longitude_range": [117.0, 119.5],
+    "latitude_range": [31.5, 33.5],
+    "date_max_future_days": 0,
+    "date_min_year": 2020
+  },
+
+  "severity_floor": {
+    "_comment": "硬规则最低严重度，不可被配置降低",
+    "R01": "错误",
+    "R02": "错误",
+    "R03": "错误",
+    "R04": "错误",
+    "R05": "错误",
+    "R06": "错误",
+    "R07": "错误",
+    "R08": "错误",
+    "R09": "警告",
+    "R10": "警告",
+    "R11": "警告",
+    "R12": "提示",
+    "R13": "提示"
+  },
+
+  "rules": [
+    {
+      "id": "R01",
+      "name": "盖度越界",
+      "field": "cover",
+      "level": "L0",
+      "requires_external": false,
+      "offline_enabled": true,
+      "data_source": "内置阈值",
+      "data_version": "1.0",
+      "severity": "错误",
+      "message": "盖度 {value}% 超出 0–100 范围",
+      "suggestion": "请核对是否误填为 {value_div10} 或 100"
+    },
+    {
+      "id": "R02",
+      "name": "经纬度疑似写反",
+      "field": "longitude,latitude",
+      "level": "L0",
+      "requires_external": false,
+      "offline_enabled": true,
+      "data_source": "内置经纬度范围",
+      "data_version": "1.0",
+      "severity": "错误",
+      "message": "经度 {longitude} / 纬度 {latitude} 疑似写反（经度应在 117–119.5，纬度应在 31.5–33.5）",
+      "suggestion": "请交换经度与纬度后重新核对"
+    },
+    {
+      "id": "R03",
+      "name": "调查日期在未来",
+      "field": "survey_date",
+      "level": "L0",
+      "requires_external": false,
+      "offline_enabled": true,
+      "data_source": "系统当前日期",
+      "data_version": "1.0",
+      "severity": "错误",
+      "message": "调查日期 {value} 晚于今天",
+      "suggestion": "请核对是否误填年份"
+    },
+    {
+      "id": "R04",
+      "name": "调查日期过早",
+      "field": "survey_date",
+      "level": "L0",
+      "requires_external": false,
+      "offline_enabled": true,
+      "data_source": "内置年份下限",
+      "data_version": "1.0",
+      "severity": "错误",
+      "message": "调查日期 {value} 早于 2020 年",
+      "suggestion": "请核对是否误填年份（如 2026 写成 2016）"
+    },
+    {
+      "id": "R05",
+      "name": "样方编号重复",
+      "field": "sample_no",
+      "level": "L0",
+      "requires_external": false,
+      "offline_enabled": true,
+      "data_source": "本批次数据",
+      "data_version": "1.0",
+      "severity": "错误",
+      "message": "样方编号 {value} 在本批次中重复出现 {count} 次",
+      "suggestion": "请核对样方编号是否复制粘贴错误"
+    },
+    {
+      "id": "R06",
+      "name": "记录ID重复",
+      "field": "record_id",
+      "level": "L0",
+      "requires_external": false,
+      "offline_enabled": true,
+      "data_source": "本批次数据",
+      "data_version": "1.0",
+      "severity": "错误",
+      "message": "记录 ID {value} 重复",
+      "suggestion": "请重新编号"
+    },
+    {
+      "id": "R07",
+      "name": "海拔越界",
+      "field": "altitude",
+      "level": "L0",
+      "requires_external": false,
+      "offline_enabled": true,
+      "data_source": "内置阈值",
+      "data_version": "1.0",
+      "severity": "错误",
+      "message": "海拔 {value} m 超出 0–2000 范围",
+      "suggestion": "请核对海拔单位（米/千米）"
+    },
+    {
+      "id": "R08",
+      "name": "盖度与植被类型矛盾",
+      "field": "cover,species",
+      "level": "L1",
+      "requires_external": false,
+      "offline_enabled": true,
+      "data_source": "本地物种名录",
+      "data_version": "1.0",
+      "severity": "错误",
+      "message": "物种「{species}」为水生/裸地类型，盖度 {cover}% 与类型不符",
+      "suggestion": "请核对物种名与盖度是否对应"
+    },
+    {
+      "id": "R09",
+      "name": "经纬度与行政区划不匹配",
+      "field": "longitude,latitude",
+      "level": "L2",
+      "requires_external": true,
+      "offline_enabled": false,
+      "data_source": "外部行政区划边界数据",
+      "data_version": "1.0",
+      "severity": "警告",
+      "message": "坐标 ({longitude}, {latitude}) 不在实习区域范围内",
+      "suggestion": "请核对坐标是否属于本次实习区域"
+    },
+    {
+      "id": "R10",
+      "name": "海拔与经纬度矛盾",
+      "field": "altitude,longitude,latitude",
+      "level": "L2",
+      "requires_external": true,
+      "offline_enabled": false,
+      "data_source": "外部DEM高程数据",
+      "data_version": "1.0",
+      "severity": "警告",
+      "message": "海拔 {altitude} m 与坐标 ({longitude}, {latitude}) 处地形高程差异过大",
+      "suggestion": "请核对海拔是否误填"
+    },
+    {
+      "id": "R11",
+      "name": "坡向不在受控词表",
+      "field": "slope_aspect",
+      "level": "L1",
+      "requires_external": false,
+      "offline_enabled": true,
+      "data_source": "本地受控词表",
+      "data_version": "1.0",
+      "severity": "警告",
+      "message": "坡向「{value}」不在受控词表内",
+      "suggestion": "请使用：北/东北/东/东南/南/西南/西/西北/平地"
+    },
+    {
+      "id": "R12",
+      "name": "物种名疑似别名",
+      "field": "species",
+      "level": "L1",
+      "requires_external": false,
+      "offline_enabled": true,
+      "data_source": "本地别名表",
+      "data_version": "1.0",
+      "severity": "提示",
+      "message": "物种「{value}」可能是「{standard}」的别名",
+      "suggestion": "建议统一使用标准名「{standard}」"
+    },
+    {
+      "id": "R13",
+      "name": "物种名不在名录",
+      "field": "species",
+      "level": "L1",
+      "requires_external": false,
+      "offline_enabled": true,
+      "data_source": "本地物种名录",
+      "data_version": "1.0",
+      "severity": "提示",
+      "message": "物种「{value}」不在本地物种名录中",
+      "suggestion": "请核对物种名拼写，或确认是否为名录外物种"
+    }
+  ],
+
+  "photo_rules": [
+    {
+      "id": "P01",
+      "name": "照片缺失",
+      "level": "L0",
+      "severity": "错误",
+      "message": "样方 {sample_no} 缺少对应照片",
+      "suggestion": "请补拍或补传照片"
+    },
+    {
+      "id": "P02",
+      "name": "照片命名不规范",
+      "level": "L0",
+      "severity": "警告",
+      "message": "照片文件名「{value}」不符合「样方编号_序号.jpg」规范",
+      "suggestion": "请按规范重命名"
+    },
+    {
+      "id": "P03",
+      "name": "照片与样方数量不符",
+      "level": "L0",
+      "severity": "提示",
+      "message": "样方 {sample_no} 有 {count} 张照片，与记录数 {record_count} 不一致",
+      "suggestion": "请核对是否漏拍或多拍"
+    }
+  ],
+
+  "controlled_vocab": {
+    "slope_aspect": ["北", "东北", "东", "东南", "南", "西南", "西", "西北", "平地"],
+    "soil_type": ["红壤", "黄壤", "黄棕壤", "棕壤", "水稻土", "石灰土", "紫色土"]
+  }
+}

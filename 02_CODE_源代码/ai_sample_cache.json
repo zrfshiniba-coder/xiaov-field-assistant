@@ -1,0 +1,36 @@
+[
+  {
+    "_comment": "离线演示缓存：非实时模型调用，仅用于无网络/无 API Key 时演示第三关流程",
+    "_author": "周荣发 / 2026210209 / 地理科学262 / 滁州学院",
+    "record_id": "LY-006",
+    "field": "species",
+    "raw_value": "黄檀",
+    "severity": "提示",
+    "confidence": 0.82,
+    "message": "「黄檀」与「黄檀属」易混，本区域常见为黄檀（Dalbergia hupeana），建议核对是否漏写种加词。",
+    "suggestion": "若确为黄檀，可保留；若为同属其他种，请补全种名。",
+    "related_rule_ids": []
+  },
+  {
+    "_comment": "离线演示缓存：非实时模型调用",
+    "record_id": "LY-014",
+    "field": "cover",
+    "raw_value": "33",
+    "severity": "提示",
+    "confidence": 0.76,
+    "message": "盖度 33% 与相邻样方（LY-013 为 38%、LY-015 为 30%）呈单调递减趋势，符合坡位变化，但建议确认是否为目测估读而非仪器测量。",
+    "suggestion": "若为目测，建议在备注中注明「目测估读」，便于后续复核。",
+    "related_rule_ids": []
+  },
+  {
+    "_comment": "离线演示缓存：非实时模型调用",
+    "record_id": "LY-022",
+    "field": "altitude",
+    "raw_value": "299.7",
+    "severity": "提示",
+    "confidence": 0.68,
+    "message": "海拔 299.7 m 保留 1 位小数，而本批次其余记录多为 1 位小数，格式一致；但该值接近 300 m 整数关口，建议核对是否由 GPS 气压计跳变导致。",
+    "suggestion": "可对照同点位重复测量值确认。",
+    "related_rule_ids": []
+  }
+]

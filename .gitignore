@@ -1,0 +1,34 @@
+# ---- 密钥与本地配置（绝对不允许进仓库）----
+config.json
+.env
+.env.local
+*.key
+*_key.txt
+qq_config.json
+
+# ---- Python ----
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+*.egg-info/
+venv/
+.venv/
+
+# ---- 运行时输出 ----
+output/
+expected_output/
+logs/
+*.log
+_ai_error.log
+
+# ---- 编辑器 / 系统 ----
+.vscode/
+.idea/
+.DS_Store
+Thumbs.db
+desktop.ini
+
+# ---- 大文件 ----
+wheels/

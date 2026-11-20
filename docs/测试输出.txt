@@ -1,0 +1,54 @@
+$ -m unittest discover -s tests -v
+
+
+test_ai_cannot_override_rule_is_false (test_min.TestConfigIntegrity.test_ai_cannot_override_rule_is_false) ... ok
+test_ai_max_severity_is_hint (test_min.TestConfigIntegrity.test_ai_max_severity_is_hint) ... ok
+test_all_rules_have_required_keys (test_min.TestConfigIntegrity.test_all_rules_have_required_keys) ... ok
+test_cover_max_in_legal_range (test_min.TestConfigIntegrity.test_cover_max_in_legal_range) ... ok
+test_host_is_localhost_only (test_min.TestConfigIntegrity.test_host_is_localhost_only) ... ok
+test_severity_floor_covers_all_rules (test_min.TestConfigIntegrity.test_severity_floor_covers_all_rules) ... ok
+test_clean_row_passes (test_min.TestHardCheck.test_clean_row_passes) ... ok
+test_f01_missing_field (test_min.TestHardCheck.test_f01_missing_field)
+F01：缺字段（表头少一列） ... ok
+test_f02_empty_value (test_min.TestHardCheck.test_f02_empty_value)
+F02：必填字段为空 ... ok
+test_f03_type_error (test_min.TestHardCheck.test_f03_type_error)
+F03：类型不可解析（cover 写成 abc） ... ok
+test_f04_bad_date (test_min.TestHardCheck.test_f04_bad_date)
+F04：日期格式错 ... ok
+test_f06_duplicate_header (test_min.TestHardCheck.test_f06_duplicate_header)
+F06：表头重复 ... ok
+test_f08_empty_file (test_min.TestHardCheck.test_f08_empty_file)
+F08：文件为空（只有表头） ... ok
+test_gbk_encoding (test_min.TestHardCheck.test_gbk_encoding)
+F05 反向验证：GBK 编码应能正常读取，不报 F05 ... ok
+test_issue_id_stable (test_min.TestHardCheck.test_issue_id_stable)
+issue_id 必须是稳定哈希（同输入同输出） ... ok
+test_ai_cannot_override_rule (test_min.TestModelChain.test_ai_cannot_override_rule)
+AI 输出的「错误」级必须被强制降为「提示」 ... ok
+test_duplicate_suppressed (test_min.TestModelChain.test_duplicate_suppressed)
+AI 提示与规则结论重复时应被抑制 ... ok
+test_low_confidence_filtered (test_min.TestModelChain.test_low_confidence_filtered)
+置信度低于阈值的提示应被过滤到附录 ... ok
+test_offline_mode_skips_ai (test_min.TestModelChain.test_offline_mode_skips_ai)
+offline 模式：ai_status 必须是 offline_skipped，不假装跑过 ... ok
+test_clean_record_no_issue (test_min.TestRuleEngine.test_clean_record_no_issue) ... ok
+test_l2_disabled_by_default (test_min.TestRuleEngine.test_l2_disabled_by_default) ... ok
+test_r01_cover_out_of_range (test_min.TestRuleEngine.test_r01_cover_out_of_range) ... ok
+test_r02_lon_lat_swapped (test_min.TestRuleEngine.test_r02_lon_lat_swapped)
+R02：经纬度写反 → 合并为 1 条问题（field 为 longitude,latitude） ... ok
+test_r03_future_date (test_min.TestRuleEngine.test_r03_future_date) ... ok
+test_r04_too_early_date (test_min.TestRuleEngine.test_r04_too_early_date) ... ok
+test_r05_duplicate_sample_no (test_min.TestRuleEngine.test_r05_duplicate_sample_no) ... ok
+test_r06_duplicate_record_id (test_min.TestRuleEngine.test_r06_duplicate_record_id) ... ok
+test_r07_altitude_out_of_range (test_min.TestRuleEngine.test_r07_altitude_out_of_range) ... ok
+test_r11_bad_slope_aspect (test_min.TestRuleEngine.test_r11_bad_slope_aspect) ... ok
+test_r12_species_alias (test_min.TestRuleEngine.test_r12_species_alias) ... ok
+test_r13_species_not_in_list (test_min.TestRuleEngine.test_r13_species_not_in_list) ... ok
+test_severity_floor_enforced (test_min.TestRuleEngine.test_severity_floor_enforced)
+severity_floor：R01 最低「错误」，配置里写「提示」也要被抬回「错误」 ... ok
+
+----------------------------------------------------------------------
+Ran 32 tests in 0.068s
+
+OK

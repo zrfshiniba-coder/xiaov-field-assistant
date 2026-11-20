@@ -1,0 +1,73 @@
+{
+  "$schema": "http://json-schema.org/draft-07/schema#",
+  "title": "小V野外助教 · 配置校验 schema",
+  "description": "启动时校验 config.json 与 rule_config.json 的合法性。作者：周荣发 2026210209",
+  "type": "object",
+  "required": ["schema_version", "app", "server", "data", "model_policy", "output", "ai_policy"],
+  "properties": {
+    "schema_version": { "type": "string" },
+    "app": {
+      "type": "object",
+      "required": ["name", "version", "author", "student_id"],
+      "properties": {
+        "name": { "type": "string", "minLength": 1 },
+        "version": { "type": "string" },
+        "author": { "type": "string" },
+        "student_id": { "type": "string", "pattern": "^[0-9]{10}$" }
+      }
+    },
+    "server": {
+      "type": "object",
+      "required": ["host", "port", "max_upload_mb", "allowed_ext"],
+      "properties": {
+        "host": { "type": "string", "enum": ["127.0.0.1", "localhost"] },
+        "port": { "type": "integer", "minimum": 1024, "maximum": 65535 },
+        "max_upload_mb": { "type": "integer", "minimum": 1, "maximum": 50 },
+        "allowed_ext": { "type": "array", "items": { "type": "string" } }
+      }
+    },
+    "data": {
+      "type": "object",
+      "required": ["encoding", "required_fields", "field_types"],
+      "properties": {
+        "encoding": { "type": "string" },
+        "required_fields": { "type": "array", "minItems": 1, "items": { "type": "string" } },
+        "field_types": { "type": "object" }
+      }
+    },
+    "model_policy": {
+      "type": "object",
+      "required": ["switch_mode", "offline_fallback", "roles"],
+      "properties": {
+        "switch_mode": { "type": "string", "enum": ["config_only"] },
+        "offline_fallback": { "type": "boolean" },
+        "require_capability_check": { "type": "boolean" },
+        "roles": {
+          "type": "object",
+          "required": ["reviewer", "judge"],
+          "additionalProperties": {
+            "type": "object",
+            "required": ["provider", "model", "base_url"],
+            "properties": {
+              "provider": { "type": "string" },
+              "model": { "type": "string" },
+              "base_url": { "type": "string" },
+              "reasoning_effort": { "type": "string", "enum": ["low", "medium", "high", "max"] },
+              "temperature": { "type": "number", "minimum": 0, "maximum": 2 }
+            }
+          }
+        }
+      }
+    },
+    "output": { "type": "object", "required": ["dir", "files"] },
+    "ai_policy": {
+      "type": "object",
+      "required": ["ai_can_override_rule", "ai_max_severity"],
+      "properties": {
+        "ai_can_override_rule": { "type": "boolean", "const": false },
+        "ai_max_severity": { "type": "string", "enum": ["提示"] },
+        "low_confidence_threshold": { "type": "number", "minimum": 0, "maximum": 1 }
+      }
+    }
+  }
+}

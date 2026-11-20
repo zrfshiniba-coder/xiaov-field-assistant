@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<!--
+  小V野外助教 · 上传页
+  作者：周荣发 / 2026210209 / 地理科学262 / 滁州学院
+  版权：本页面为周荣发原创作品，仅用于滁州学院2026级新生人工智能创新应用比赛提交与评审。
+-->
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>{{ app_name }} · 上传数据</title>
+  <style>
+    * { box-sizing: border-box; }
+    body {
+      margin: 0; padding: 0;
+      font-family: "Microsoft YaHei", "PingFang SC", "Helvetica Neue", Arial, sans-serif;
+      background: linear-gradient(160deg, #f0f7f4 0%, #e8f1f8 100%);
+      min-height: 100vh;
+      display: flex; align-items: center; justify-content: center;
+      color: #1f2d3d;
+    }
+    .card {
+      background: #fff;
+      border-radius: 16px;
+      box-shadow: 0 8px 32px rgba(31, 45, 61, 0.10);
+      padding: 44px 48px 36px;
+      width: 100%; max-width: 620px;
+    }
+    h1 { margin: 0 0 6px; font-size: 26px; letter-spacing: 1px; }
+    .sub { color: #5a6b7b; font-size: 14px; margin-bottom: 28px; }
+    .flow {
+      background: #f7fafc; border-left: 4px solid #2f9e6e;
+      padding: 14px 18px; border-radius: 6px;
+      font-size: 13px; line-height: 1.9; color: #3d4f5f;
+      margin-bottom: 26px;
+    }
+    .flow b { color: #2f9e6e; }
+    .drop {
+      border: 2px dashed #b8ccd9; border-radius: 12px;
+      padding: 34px 20px; text-align: center;
+      transition: all .2s; cursor: pointer;
+      background: #fbfdfe;
+    }
+    .drop:hover { border-color: #2f9e6e; background: #f4fbf8; }
+    .drop input[type=file] { display: none; }
+    .drop .icon { font-size: 34px; margin-bottom: 8px; }
+    .drop .hint { color: #7b8b9a; font-size: 13px; margin-top: 6px; }
+    .fname { margin-top: 10px; font-size: 13px; color: #2f9e6e; font-weight: 600; }
+    button {
+      width: 100%; margin-top: 22px; padding: 14px;
+      background: #2f9e6e; color: #fff; border: none; border-radius: 10px;
+      font-size: 16px; font-weight: 600; letter-spacing: 2px; cursor: pointer;
+      transition: background .2s;
+    }
+    button:hover { background: #268a5f; }
+    .flash {
+      background: #fff4e5; border-left: 4px solid #e8a33d;
+      padding: 10px 14px; border-radius: 6px; font-size: 13px;
+      color: #8a5a00; margin-bottom: 18px;
+    }
+    .foot {
+      margin-top: 30px; padding-top: 18px; border-top: 1px solid #eef2f5;
+      font-size: 12px; color: #93a3b1; text-align: center; line-height: 1.8;
+    }
+  </style>
+</head>
+<body>
+  <div class="card">
+    <h1>{{ app_name }}</h1>
+    <div class="sub">{{ subtitle }}</div>
+
+    {% with msgs = get_flashed_messages() %}
+      {% if msgs %}
+        {% for m in msgs %}<div class="flash">{{ m }}</div>{% endfor %}
+      {% endif %}
+    {% endwith %}
+
+    <div class="flow">
+      <b>四道关</b>：格式硬校验（F01–F08）→ 规则引擎（R01–R13 + P01–P03）<br>
+      → AI 补充提示（不覆盖规则）→ 教师复核与留痕
+    </div>
+
+    <form action="/upload" method="post" enctype="multipart/form-data">
+      <label class="drop" id="drop">
+        <input type="file" name="csv_file" id="file" accept=".csv">
+        <div class="icon">📄</div>
+        <div>点击选择 CSV 文件，或拖拽到此处</div>
+        <div class="hint">仅支持 .csv，最大 {{ max_mb }}MB</div>
+        <div class="fname" id="fname"></div>
+      </label>
+      <button type="submit">开始质检</button>
+    </form>
+
+    <div class="foot">
+      {{ author }} · {{ student_id }} · {{ klass }} · {{ school }}<br>
+      本工具仅在本机运行（127.0.0.1），数据不上传服务器
+    </div>
+  </div>
+
+  <script>
+    const input = document.getElementById('file');
+    const fname = document.getElementById('fname');
+    input.addEventListener('change', () => {
+      fname.textContent = input.files.length ? '已选择：' + input.files[0].name : '';
+    });
+    const drop = document.getElementById('drop');
+    ['dragover', 'dragenter'].forEach(ev =>
+      drop.addEventListener(ev, e => { e.preventDefault(); drop.style.borderColor = '#2f9e6e'; }));
+    ['dragleave', 'drop'].forEach(ev =>
+      drop.addEventListener(ev, e => { e.preventDefault(); drop.style.borderColor = '#b8ccd9'; }));
+    drop.addEventListener('drop', e => {
+      if (e.dataTransfer.files.length) {
+        input.files = e.dataTransfer.files;
+        fname.textContent = '已选择：' + e.dataTransfer.files[0].name;
+      }
+    });
+  </script>
+</body>
+</html>

@@ -1,0 +1,18 @@
+# 小V野外助教 —— 运行依赖
+# 作者：周荣发 / 2026210209 / 地理科学262 / 滁州学院
+#
+# 说明：
+#   1. 核心质检链路（hard_check / rule_engine / run_eval）**只用 Python 标准库**，
+#      不装任何第三方包也能跑通「第一关 + 第二关 + 第四关材料生成」。
+#   2. 只有「网页表单（app.py）」需要 Flask；「第三关 AI 补充提示」需要 requests。
+#   3. 无网络环境：用 wheels/ 目录离线安装
+#        pip install --no-index --find-links=wheels -r requirements.txt
+
+# --- 网页表单（可选，仅 app.py 需要）---
+Flask==3.0.3
+
+# --- 第三关 AI 调用（可选，仅在线模式需要）---
+requests==2.32.3
+
+# --- 配置校验（可选，run_eval.py 会尝试导入，缺失则跳过 schema 校验）---
+jsonschema==4.23.0
